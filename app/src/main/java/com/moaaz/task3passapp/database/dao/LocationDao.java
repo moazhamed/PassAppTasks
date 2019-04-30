@@ -16,19 +16,19 @@ import java.util.List;
 public interface LocationDao {
 
     @Insert
-    void InsertLocation(LocationItem locationItem);
+    void insertLocation(LocationItem locationItem);
 
     @Delete
-    void DeleteLocation(LocationItem locationitem);
+    void deleteLocation(LocationItem locationItem);
 
     @Update
-    void UpdateLocation(LocationItem locationitem);
+    void updateLocation(LocationItem locationItem);
 
 
     @Query("select * from LocationItem;")
     List<LocationItem> getAllLocations();
 
     @Insert
-    void InsertListOfLocations(List<LocationItem> locationItemList);
+    void insertListOfLocations(List<LocationItem> locationItemList);
 
 }
