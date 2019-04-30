@@ -1,4 +1,4 @@
-package com.moaaz.task3passapp.fragments;
+package com.moaaz.task3passapp.fragment;
 
 
 import android.os.Bundle;
@@ -24,7 +24,13 @@ public class LocationDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_location_details, container, false);
+        View view =  inflater.inflate(R.layout.fragment_location_details, container, false);
+
+
+
+
+
+        return view;
     }
 
 }

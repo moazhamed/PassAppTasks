@@ -15,12 +15,13 @@
         android:background="@drawable/item_rounded_corners"
         >
 
-        <ImageView
-            android:id="@+id/location_image"
+        <TextView
+            android:id="@+id/location_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:text="location name"
+            android:textSize="20sp"
             />
 
         <TextView
@@ -28,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/location_image"
+            app:layout_constraintTop_toBottomOf="@id/location_name"
             tools:text="this is location description" />
 
     </android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.moaaz.task3passapp.fragments;
+package com.moaaz.task3passapp.fragment;
 
 
 import android.os.Bundle;
@@ -39,7 +39,6 @@ public class MapFragment extends Fragment {
                  Fragment fragment = new LocationDetailsFragment();
                  getActivity().getSupportFragmentManager()
                          .beginTransaction()
-                         .addToBackStack(null)
                          .replace(R.id.fragment_container, fragment)
                          .commit();
              }
