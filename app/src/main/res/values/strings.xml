@@ -8,4 +8,6 @@
     <string name="warning">Warning</string>
     <string name="location_explanation">please allow app to use your location</string>
     <string name="ok">ok</string>
+    <string name="picked_location_longitude">Picked location longitude</string>
+    <string name="picked_location_latitude">picked location latitude</string>
 </resources>

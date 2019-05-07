@@ -2,6 +2,7 @@ package com.moaaz.task3passapp.fragment;
 
 
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,33 +11,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.moaaz.task3passapp.R;
-import com.moaaz.task3passapp.base.BaseFragment;
-import com.moaaz.task3passapp.utlis.MyLocationProvider;
 
-import java.util.Map;
+import com.moaaz.task3passapp.utli.MyLocationProvider;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends BaseFragment implements OnMapReadyCallback {
+
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     MapView locationMap;
     GoogleMap mGoogleMap;
-    Button save;
-    Location currentLocation;
+    Button next;
+    public static Location currentLocation;
     Marker currentLocationMarker;
     MyLocationProvider locationProvider;
-
+    Bundle bundle = new Bundle();
 
 
     public MapFragment() {
@@ -53,14 +53,17 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         locationMap = view.findViewById(R.id.location_map);
         locationMap.onCreate(savedInstanceState);
 
-        save = view.findViewById(R.id.save_button);
-        save.setOnClickListener(new View.OnClickListener() {
+        next = view.findViewById(R.id.next_button);
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new LocationDetailsFragment();
-                getActivity().getSupportFragmentManager()
+
+          Fragment fragment = new LocationDetailsFragment();
+                fragment.setArguments(bundle);
+                getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -75,22 +78,42 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         locationMap.getMapAsync(this);
 
 
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        locationProvider= new MyLocationProvider(activity , null);
+        locationProvider = new MyLocationProvider(getContext(), this);
         currentLocation = locationProvider.getCurrentLocation();
+
         MapsInitializer.initialize(getContext());
         this.mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("You're here");
-        currentLocationMarker = mGoogleMap.addMarker(markerOptions);
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng , 12.0f));
+        LatLng mLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
+        MarkerOptions markerOptions = new MarkerOptions().position(mLatLng).title("You're here");
+        currentLocationMarker = mGoogleMap.addMarker(markerOptions);
+
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 12.0f));
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (currentLocationMarker != null) {
+                    currentLocationMarker.remove();
+                }
+                currentLocationMarker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+              //  Toast.makeText(getContext(), latLng.latitude + "  " + latLng.longitude, Toast.LENGTH_LONG).show();
+                bundle.putDouble("Longitude", latLng.longitude);
+                bundle.putDouble("Latitude", latLng.latitude);
+
+
+            }
+        });
 
     }
 
@@ -129,4 +152,28 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         super.onLowMemory();
         locationMap.onLowMemory();
     }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+
 }

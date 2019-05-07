@@ -1,19 +1,24 @@
 package com.moaaz.task3passapp.fragment;
 
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-
-import com.moaaz.task3passapp.base.BaseFragment;
-import com.moaaz.task3passapp.utlis.Data;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.moaaz.task3passapp.R;
 import com.moaaz.task3passapp.adapter.LocationsAdapter;
 import com.moaaz.task3passapp.database.MyDataBase;
@@ -24,12 +29,17 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LocationsListFragment extends BaseFragment {
+public class LocationsListFragment extends Fragment {
 
-    ImageButton addButton;
-    RecyclerView recyclerView;
-    LocationsAdapter adapter;
-    Fragment fragment = new MapFragment();
+    private FloatingActionButton addButton;
+    private RecyclerView recyclerView;
+    private LocationsAdapter adapter;
+    private TextView add;
+    private Fragment fragment = new MapFragment();
+    List<LocationItem> list;
+
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION_CODE = 1;
 
     public LocationsListFragment() {
         // Required empty public constructor
@@ -40,8 +50,9 @@ public class LocationsListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         //////////////// Inflate the layout for this fragment/////////////////////////
         View view = inflater.inflate(R.layout.fragment_locations_list, container, false);
-        addButton = view.findViewById(R.id.add_button);
         recyclerView = view.findViewById(R.id.recycler_view);
+        addButton = view.findViewById(R.id.add_button);
+        add = view.findViewById(R.id.click_add);
         getLocationsFromDataBase();
         setAdapterData();
         return view;
@@ -51,30 +62,107 @@ public class LocationsListFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //replace the code in onCreateView here
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    public void setAdapterData() {
-        adapter = new LocationsAdapter(Data.getData());
-        recyclerView.setAdapter(adapter);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.fragment_container, fragment)
-                        .commit();
+                if (isLocationPermissionAllowed()) {
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack(null)
+                            .replace(R.id.fragment_container, fragment)
+                            .commit();
+                } else {
+                    //request location permission
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                    builder.setMessage("you've to enable location permission");
+//                    builder.setCancelable(true);
+//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//                    AlertDialog alertDialog = builder.create();
+//                    alertDialog.show();
+//
+                    requestLocationPermission();
+                }
+
             }
+
         });
 
     }
 
-    public void getLocationsFromDataBase() {
-  /*
-        TODO
-        retrieve the data from the database and then fill the adapter with this data
+    private void setAdapterData() {
+        adapter = new LocationsAdapter(list);
+        recyclerView.setAdapter(adapter);
+    }
 
-        */
+    private void getLocationsFromDataBase() {
+        list = MyDataBase
+                .getInstance(getContext())
+                .LocationDao()
+                .getAllLocations();
+        if (list.size()!=0){
+            add.setVisibility(View.GONE);
+        }
+
+    }
+
+    private Boolean isLocationPermissionAllowed() {
+
+        if (ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            return false;
+        }
+        return true;
+    }
+
+    private void requestLocationPermission() {
+      requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Log.e("granted" , "permission granted");
+
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack(null)
+                            .replace(R.id.fragment_container, fragment)
+                            .commit();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
+                    Log.e("denied" , "permission denied");
+                }
+
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+
+
     }
 
 

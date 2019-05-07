@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.moaaz.task3passapp.R;
 import com.moaaz.task3passapp.model.LocationItem;
 
@@ -33,6 +35,10 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.Loca
         LocationItem item = locationDetailsList.get(i);
         viewHolder.locationName.setText(item.getName());
         viewHolder.locationDescription.setText(item.getLocationDescription());
+        viewHolder.locationLong.setText(String.valueOf(item.getLongitude()));
+        viewHolder.locationLat.setText(String.valueOf(item.getLatitude()));
+      //  Picasso.get().load(item.getPhotoUri()).fit().into(viewHolder.locationImage);
+        Glide.with(viewHolder.itemView).load(item.getPhotoURI()).into(viewHolder.locationImage);
         // viewHolder.locationImage.setImageResource(item.getLocationImageUrl());
     }
 
@@ -45,11 +51,17 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsAdapter.Loca
     public class LocationViewHolder extends RecyclerView.ViewHolder {
         TextView locationName;
         TextView locationDescription;
+        TextView locationLong;
+        TextView locationLat;
+        ImageView locationImage;
 
         public LocationViewHolder(View view) {
             super(view);
             locationName = view.findViewById(R.id.location_name);
-            locationDescription = view.findViewById(R.id.location_description);
+            locationDescription = view.findViewById(R.id.locaion_description);
+            locationLong = view.findViewById(R.id.location_long);
+            locationLat = view.findViewById(R.id.location_lat);
+            locationImage = view.findViewById(R.id.location_image);
 
         }
 

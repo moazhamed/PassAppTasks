@@ -1,4 +1,4 @@
-package com.moaaz.task3passapp.utlis;
+package com.moaaz.task3passapp.utli;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.location.LocationManager;
 import java.util.List;
 
 public class MyLocationProvider {
-    LocationManager locationManager;
+   LocationManager locationManager;
     Location location;
     boolean canGetlocation;
     Context context;
@@ -51,6 +51,7 @@ public class MyLocationProvider {
         if (location == null) {
             location = getBestLastKnownLocation();
         }
+
         //To get location updates
         if (locationListener != null) {
             locationManager.requestLocationUpdates(provider,
@@ -58,6 +59,7 @@ public class MyLocationProvider {
                     MIN_DISTANCE_BETWEEN_UPDATES,
                     locationListener);
         }
+
         return location;
     }
 

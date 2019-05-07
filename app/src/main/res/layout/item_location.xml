@@ -5,33 +5,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="6dp"
+    android:elevation="10dp"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="2dp"
     >
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp"
-        android:background="@drawable/item_rounded_corners"
         >
-
         <TextView
             android:id="@+id/location_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_image"
             tools:text="location name"
             android:textSize="20sp"
+            android:textColor="#FFF"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:textStyle="bold"
             />
 
         <TextView
-            android:id="@+id/location_description"
+            android:id="@+id/location_long"
+            android:layout_width="0dp"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/location_lat"
+            app:layout_constraintTop_toBottomOf="@id/locaion_description"
+            tools:text="this is location long"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            />
+
+        <TextView
+            android:id="@+id/location_lat"
+            android:layout_width="0dp"
+            android:textSize="16sp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/location_long"
+            app:layout_constraintTop_toBottomOf="@id/locaion_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="this is location lat"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+
+            />
+
+        <TextView
+            android:id="@+id/locaion_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:textColor="#FFFF"
+            android:textSize="16sp"
+            android:textStyle="normal"
             app:layout_constraintTop_toBottomOf="@id/location_name"
-            tools:text="this is location description" />
+            tools:layout_editor_absoluteX="4dp"
+            tools:text="this is location description"/>
 
+        <ImageView
+
+            android:id="@+id/location_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintStart_toStartOf="@id/location_name"
+            app:layout_constraintEnd_toEndOf="@id/location_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/breaking_bad"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            />
     </android.support.constraint.ConstraintLayout>
 
 
