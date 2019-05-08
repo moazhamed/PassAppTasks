@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation android:id="@+id/nav_graph"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@id/locationsListFragment">
+
+    <fragment
+        android:id="@+id/locationDetailsFragment"
+        android:name="com.moaaz.task3passapp.fragment.LocationDetailsFragment"
+        android:label="fragment_location_details"
+        tools:layout="@layout/fragment_location_details">
+        <argument
+            android:name="longitude"
+            app:argType="double"/>
+        <argument
+            android:name="latitude"
+            app:argType="double"/>
+        <action
+            android:id="@+id/action_locationDetailsFragment_to_locationsListFragment"
+            app:destination="@id/locationsListFragment"
+            app:popUpTo="@+id/locationsListFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/locationsListFragment"
+        android:name="com.moaaz.task3passapp.fragment.LocationsListFragment"
+        android:label="fragment_locations_list"
+        tools:layout="@layout/fragment_locations_list"/>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.moaaz.task3passapp.fragment.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map"/>
+</navigation>
+

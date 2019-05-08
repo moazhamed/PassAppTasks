@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import androidx.navigation.fragment.NavHostFragment;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -81,9 +82,9 @@ public class LocationDetailsFragment extends Fragment {
         longitude = bundle.getDouble(LONGITUDE);
         latitude = bundle.getDouble(LATITUDE);
 
-        locationInfo.setText(R.string.picked_location_longitude + longitude + "\n" +
-                R.string.picked_location_latitude
-                + latitude);
+        locationInfo.setText(R.string.picked_location_longitude + longitude + " " +
+                " " + R.string.picked_location_latitude + latitude);
+
 
         cameraImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,11 +112,9 @@ public class LocationDetailsFragment extends Fragment {
 
                 } else {
                     saveLocationDetailsToDataBase();
-                    /////////////////////////from first task with fragments//////////////
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                        fm.popBackStack();
-                    }
+                    NavHostFragment.findNavController(getParentFragment()).
+                            popBackStack(R.id.locationsListFragment, true);
+
                 }
             }
         });

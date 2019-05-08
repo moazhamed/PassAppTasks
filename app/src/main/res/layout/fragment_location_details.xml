@@ -11,11 +11,13 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_margin="6dp"
-        app:srcCompat="@drawable/download"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/download"
         />
 
     <Button
@@ -24,7 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:text="camera"
-        app:layout_constraintStart_toStartOf="@id/image"
+        app:layout_constraintBottom_toTopOf="@id/info"
+        app:layout_constraintEnd_toStartOf="@id/gallery"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image"
         />
 
@@ -32,43 +36,47 @@
         android:id="@+id/gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/image"
-        app:layout_constraintEnd_toEndOf="@id/image"
         android:layout_marginEnd="50dp"
         android:text="gallery"
+        app:layout_constraintBottom_toTopOf="@id/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/camera"
+        app:layout_constraintTop_toBottomOf="@id/image"
         />
 
     <TextView
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:paddingLeft="4dp"
         app:layout_constraintBottom_toTopOf="@id/name"
         app:layout_constraintTop_toBottomOf="@id/gallery"
-        tools:text="location longitude and latitude" />
+        tools:text="location longitude and latitude"/>
 
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:hint="Location name"
-        android:paddingLeft="4dp"
+        android:layout_height="wrap_content"
         android:gravity="top"
+        android:hint="Location name"
         android:imeOptions="actionNext"
         android:inputType="textPersonName"
+        android:paddingLeft="4dp"
         android:singleLine="true"
-        app:layout_constraintTop_toBottomOf="@id/info" />
+        app:layout_constraintBottom_toTopOf="@id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info"/>
 
     <EditText
         android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
         android:gravity="top"
         android:hint="Location description"
-        android:inputType="textMultiLine"
+        android:inputType="textLongMessage"
+        app:layout_constraintBottom_toTopOf="@id/button_save"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name"
         />
 
@@ -80,7 +88,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/description" />
+        app:layout_constraintTop_toBottomOf="@id/description"
+        />
 
 
 </android.support.constraint.ConstraintLayout>

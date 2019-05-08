@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -21,8 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.moaaz.task3passapp.R;
-
 import com.moaaz.task3passapp.utli.MyLocationProvider;
+
+import androidx.navigation.fragment.NavHostFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,14 +59,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-          Fragment fragment = new LocationDetailsFragment();
-                fragment.setArguments(bundle);
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                NavHostFragment.findNavController(getParentFragment())
+                        .navigate(R.id.locationDetailsFragment, bundle);
             }
         });
 

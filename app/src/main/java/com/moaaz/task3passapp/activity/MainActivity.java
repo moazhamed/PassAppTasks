@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.setContentView(R.layout.activity_main);
 
 
-        pushListLocationFragment();
+        //  pushListLocationFragment();
 
 
 
