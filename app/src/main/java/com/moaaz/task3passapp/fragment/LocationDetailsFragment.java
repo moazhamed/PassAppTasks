@@ -43,7 +43,7 @@ public class LocationDetailsFragment extends Fragment {
     TextView locationInfo;
     String desc, name;
     EditText locationName, locationDescription;
-    Double longitude, latitude;
+    Float longitude, latitude;
     String currentPhotoPath;
     Uri photoURI;
     String photo;
@@ -79,8 +79,8 @@ public class LocationDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
-        longitude = bundle.getDouble(LONGITUDE);
-        latitude = bundle.getDouble(LATITUDE);
+        longitude = bundle.getFloat(LONGITUDE);
+        latitude = bundle.getFloat(LATITUDE);
 
         locationInfo.setText(R.string.picked_location_longitude + longitude + " " +
                 " " + R.string.picked_location_latitude + latitude);
@@ -113,7 +113,7 @@ public class LocationDetailsFragment extends Fragment {
                 } else {
                     saveLocationDetailsToDataBase();
                     NavHostFragment.findNavController(getParentFragment()).
-                            popBackStack(R.id.locationsListFragment, true);
+                            popBackStack(R.id.locationsListFragment, false);
 
                 }
             }

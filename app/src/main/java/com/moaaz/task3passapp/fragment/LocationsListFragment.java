@@ -24,6 +24,7 @@ import com.moaaz.task3passapp.model.LocationItem;
 
 import java.util.List;
 
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 /**
@@ -60,37 +61,23 @@ public class LocationsListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         //replace the code in onCreateView here
         super.onViewCreated(view, savedInstanceState);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isLocationPermissionAllowed()) {
+
+                    Navigation.findNavController(v).navigate(R.id.action_locationsListFragment_to_mapFragment);
 //
 //                    NavHostFragment.findNavController(getParentFragment())
-//                            .navigate(R.id.mapFragment);
+//                            .navigate(R.id.action_locationsListFragment_to_mapFragment);
+
 
                 } else {
-                    //request location permission
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                    builder.setMessage("you've to enable location permission");
-//                    builder.setCancelable(true);
-//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                        }
-//                    });
-//                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                        }
-//                    });
-//                    AlertDialog alertDialog = builder.create();
-//                    alertDialog.show();
-//
+
+
                     requestLocationPermission();
                 }
 

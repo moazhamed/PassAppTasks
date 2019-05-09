@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.moaaz.task3passapp.R;
 import com.moaaz.task3passapp.utli.MyLocationProvider;
 
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.Navigation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +39,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     Marker currentLocationMarker;
     MyLocationProvider locationProvider;
     Bundle bundle = new Bundle();
+    private static final String LONGITUDE = "Longitude";
+    private static final String LATITUDE = "Latitude";
 
 
     public MapFragment() {
@@ -59,8 +61,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(getParentFragment())
-                        .navigate(R.id.locationDetailsFragment, bundle);
+                Navigation.findNavController(v).navigate(R.id.action_mapFragment_to_locationDetailsFragment, bundle);
+
             }
         });
 
@@ -104,8 +106,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         .icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
               //  Toast.makeText(getContext(), latLng.latitude + "  " + latLng.longitude, Toast.LENGTH_LONG).show();
-                bundle.putDouble("Longitude", latLng.longitude);
-                bundle.putDouble("Latitude", latLng.latitude);
+                bundle.putFloat(LONGITUDE, (float) latLng.longitude);
+                bundle.putFloat(LATITUDE, (float) latLng.latitude);
 
 
             }
