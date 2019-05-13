@@ -1,16 +1,12 @@
 package com.moaaz.task3passapp.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.moaaz.task3passapp.R;
-import com.moaaz.task3passapp.fragment.LocationsListFragment;
 
 
 public class MainActivity extends AppCompatActivity {
-
-
 
 
     @Override
@@ -19,23 +15,21 @@ public class MainActivity extends AppCompatActivity {
         super.setContentView(R.layout.activity_main);
 
 
-        pushListLocationFragment();
-
-
+//        pushListLocationFragment();
+//        Navigation.findNavController().navigate(R.id.locationsListFragment);
 
 
     }
 
 
-    void pushListLocationFragment() {
-        Fragment fragment = new LocationsListFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-
-    }
-
+//    void pushListLocationFragment() {
+//        Fragment fragment = new LocationsListFragment();
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.fragment_container, fragment)
+//                .commit();
+//
+//    }
 
 
 }

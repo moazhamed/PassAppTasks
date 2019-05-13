@@ -5,7 +5,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 @Entity
@@ -16,10 +15,10 @@ public class LocationItem {
     private int id;
 
     @ColumnInfo
-    private Double longitude;
+    private Float longitude;
 
     @ColumnInfo
-    private Double latitude;
+    private Float latitude;
 
     @ColumnInfo
     private String photoURI;
@@ -35,7 +34,7 @@ public class LocationItem {
     }
 
     @Ignore
-    public LocationItem(Double longitude, Double latitude, String photoURI, String locationDescription, String name) {
+    public LocationItem(Float longitude, Float latitude, String photoURI, String locationDescription, String name) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.photoURI = photoURI;
@@ -47,19 +46,19 @@ public class LocationItem {
         this.id = id;
     }
 
-    public Double getLongitude() {
+    public Float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(Float longitude) {
         this.longitude = longitude;
     }
 
-    public Double getLatitude() {
+    public Float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(Float latitude) {
         this.latitude = latitude;
     }
 

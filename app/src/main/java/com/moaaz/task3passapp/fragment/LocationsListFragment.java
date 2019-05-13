@@ -2,14 +2,11 @@ package com.moaaz.task3passapp.fragment;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.moaaz.task3passapp.R;
 import com.moaaz.task3passapp.adapter.LocationsAdapter;
 import com.moaaz.task3passapp.database.MyDataBase;
 import com.moaaz.task3passapp.model.LocationItem;
 
 import java.util.List;
+
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +38,7 @@ public class LocationsListFragment extends Fragment {
     private TextView add;
     private Fragment fragment = new MapFragment();
     List<LocationItem> list;
+    // NavController navControler;
 
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION_CODE = 1;
@@ -59,44 +61,30 @@ public class LocationsListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         //replace the code in onCreateView here
         super.onViewCreated(view, savedInstanceState);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isLocationPermissionAllowed()) {
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .replace(R.id.fragment_container, fragment)
-                            .commit();
-                } else {
-                    //request location permission
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                    builder.setMessage("you've to enable location permission");
-//                    builder.setCancelable(true);
-//                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                        }
-//                    });
-//                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                        }
-//                    });
-//                    AlertDialog alertDialog = builder.create();
-//                    alertDialog.show();
+
+                    Navigation.findNavController(v).navigate(R.id.action_locationsListFragment_to_mapFragment);
 //
+//                    NavHostFragment.findNavController(getParentFragment())
+//                            .navigate(R.id.action_locationsListFragment_to_mapFragment);
+
+
+                } else {
+
+
                     requestLocationPermission();
                 }
 
             }
 
         });
+
 
     }
 
@@ -143,12 +131,8 @@ public class LocationsListFragment extends Fragment {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Log.e("granted" , "permission granted");
+                    NavHostFragment.findNavController(getParentFragment()).navigate(R.id.mapFragment);
 
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .replace(R.id.fragment_container, fragment)
-                            .commit();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
