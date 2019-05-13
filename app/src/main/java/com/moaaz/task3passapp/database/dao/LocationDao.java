@@ -17,13 +17,13 @@ import java.util.List;
 public interface LocationDao {
 
     @Insert
-    void insertLocation(LocationItem locationItem);
+    long insertLocation(LocationItem locationItem);
 
     @Delete
-    void deleteLocation(LocationItem locationItem);
+    int deleteLocation(LocationItem locationItem);
 
     @Update
-    void updateLocation(LocationItem locationItem);
+    int updateLocation(LocationItem locationItem);
 
 
     @Query("select * from LocationItem;")

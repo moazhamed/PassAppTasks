@@ -18,11 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.moaaz.task3passapp.R;
-import com.moaaz.task3passapp.database.MyDataBase;
-import com.moaaz.task3passapp.model.LocationItem;
+import com.moaaz.task3passapp.fragment.presenter.LocationDetailsPresenter;
+import com.moaaz.task3passapp.fragment.view.LocationDetailsView;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,39 +33,49 @@ import java.util.Date;
 import androidx.navigation.fragment.NavHostFragment;
 
 import static android.app.Activity.RESULT_OK;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LocationDetailsFragment extends Fragment {
-    ImageView locationImage;
-    Button galleryImage, cameraImage, saveButton;
-    TextView locationInfo;
-    String desc, name;
-    EditText locationName, locationDescription;
-    Float longitude, latitude;
-    String currentPhotoPath;
-    Uri photoURI;
-    String photo;
+public class LocationDetailsFragment extends Fragment implements LocationDetailsView {
 
-
+    private ImageView locationImage;
+    private Button galleryImage, cameraImage, saveButton;
+    private TextView locationInfo;
+    private String desc, name;
+    private EditText locationName, locationDescription;
+    private Float longitude, latitude;
+    private String currentPhotoPath;
+    private Uri photoURI;
+    private String photo;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA_IMAGE_CODE = 2;
     private static final int MY_PERMISSIONS_REQUEST_GALLERY_IMAGE_CODE = 3;
     private static final String LONGITUDE = "Longitude";
     private static final String LATITUDE = "Latitude";
+    private LocationDetailsPresenter presenter;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = new LocationDetailsPresenter();
+    }
 
     public LocationDetailsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_location_details, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.attachView(this);
         locationImage = view.findViewById(R.id.image);
         cameraImage = view.findViewById(R.id.camera);
         galleryImage = view.findViewById(R.id.gallery);
@@ -72,18 +83,12 @@ public class LocationDetailsFragment extends Fragment {
         locationInfo = view.findViewById(R.id.info);
         locationName = view.findViewById(R.id.name);
         locationDescription = view.findViewById(R.id.description);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         longitude = bundle.getFloat(LONGITUDE);
         latitude = bundle.getFloat(LATITUDE);
 
-        locationInfo.setText(R.string.picked_location_longitude + longitude + " " +
-                " " + R.string.picked_location_latitude + latitude);
+        locationInfo.setText(getString(R.string.picked_location_longitude) + longitude + " " +
+                " " + getString(R.string.picked_location_latitude) + latitude);
 
 
         cameraImage.setOnClickListener(new View.OnClickListener() {
@@ -110,10 +115,13 @@ public class LocationDetailsFragment extends Fragment {
                     locationDescription.setError("please enter location description !");
                     locationName.setError("please enter location name !");
 
+
                 } else {
-                    saveLocationDetailsToDataBase();
-                    NavHostFragment.findNavController(getParentFragment()).
-                            popBackStack(R.id.locationsListFragment, false);
+                    desc = locationDescription.getText().toString();
+                    name = locationName.getText().toString();
+
+                    presenter.saveLocationDetailsToDataBase(getContext(), longitude, latitude
+                            , photo, desc, name);
 
                 }
             }
@@ -121,15 +129,19 @@ public class LocationDetailsFragment extends Fragment {
 
     }
 
-    public void saveLocationDetailsToDataBase() {
-        desc = locationDescription.getText().toString();
-        name = locationName.getText().toString();
-        MyDataBase
-                .getInstance(getContext())
-                .LocationDao()
-                .insertLocation(new LocationItem(longitude, latitude, photo, desc, name));
+    @Override
+    public void OnInsertionCompleted() {
+        Toast.makeText(getContext(), "Insertion Completed !", Toast.LENGTH_SHORT).show();
+        NavHostFragment.findNavController(getParentFragment()).
+                popBackStack(R.id.locationsListFragment, false);
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,13 +151,11 @@ public class LocationDetailsFragment extends Fragment {
             if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA_IMAGE_CODE) {
                 photoURI = Uri.fromFile(new File(currentPhotoPath));
                 Glide.with(getContext()).load(photoURI).into(locationImage);
-                //Picasso.get().load(photoURI).into(locationImage);
                 photo = photoURI.toString();
 
             } else if (requestCode == MY_PERMISSIONS_REQUEST_GALLERY_IMAGE_CODE) {
                 photoURI = data.getData();
                 Glide.with(getContext()).load(photoURI).into(locationImage);
-              // Picasso.get().load(photoURI).into(locationImage);
                 photo = photoURI.toString();
             }
         }

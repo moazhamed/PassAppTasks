@@ -19,10 +19,8 @@ import android.widget.Toast;
 
 import com.moaaz.task3passapp.R;
 import com.moaaz.task3passapp.adapter.LocationsAdapter;
-import com.moaaz.task3passapp.database.MyDataBase;
-import com.moaaz.task3passapp.model.LocationItem;
-
-import java.util.List;
+import com.moaaz.task3passapp.fragment.presenter.LocationsListPresenter;
+import com.moaaz.task3passapp.fragment.view.LocationsListView;
 
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -30,49 +28,45 @@ import androidx.navigation.fragment.NavHostFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LocationsListFragment extends Fragment {
+public class LocationsListFragment extends Fragment implements LocationsListView {
 
     private FloatingActionButton addButton;
     private RecyclerView recyclerView;
     private LocationsAdapter adapter;
     private TextView add;
-    private Fragment fragment = new MapFragment();
-    List<LocationItem> list;
-    // NavController navControler;
-
-
     public static final int MY_PERMISSIONS_REQUEST_LOCATION_CODE = 1;
+    private LocationsListPresenter presenter;
 
     public LocationsListFragment() {
-        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = new LocationsListPresenter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //////////////// Inflate the layout for this fragment/////////////////////////
         View view = inflater.inflate(R.layout.fragment_locations_list, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        addButton = view.findViewById(R.id.add_button);
-        add = view.findViewById(R.id.click_add);
-        getLocationsFromDataBase();
-        setAdapterData();
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        //replace the code in onCreateView here
         super.onViewCreated(view, savedInstanceState);
+        presenter.attachView(this);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        addButton = view.findViewById(R.id.add_button);
+        add = view.findViewById(R.id.click_add);
+        setAdapterData();
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isLocationPermissionAllowed()) {
 
                     Navigation.findNavController(v).navigate(R.id.action_locationsListFragment_to_mapFragment);
-//
-//                    NavHostFragment.findNavController(getParentFragment())
-//                            .navigate(R.id.action_locationsListFragment_to_mapFragment);
 
 
                 } else {
@@ -80,28 +74,27 @@ public class LocationsListFragment extends Fragment {
 
                     requestLocationPermission();
                 }
-
             }
 
         });
+    }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.deAttachView();
     }
 
     private void setAdapterData() {
-        adapter = new LocationsAdapter(list);
+        adapter = new LocationsAdapter(presenter.getLocationsFromDataBase(getContext()));
         recyclerView.setAdapter(adapter);
     }
 
-    private void getLocationsFromDataBase() {
-        list = MyDataBase
-                .getInstance(getContext())
-                .LocationDao()
-                .getAllLocations();
-        if (list.size()!=0){
+    @Override
+    public void hideEmptyView() {
+        if (adapter != null) {
             add.setVisibility(View.GONE);
         }
-
     }
 
     private Boolean isLocationPermissionAllowed() {
@@ -116,7 +109,7 @@ public class LocationsListFragment extends Fragment {
     }
 
     private void requestLocationPermission() {
-      requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_LOCATION_CODE);
     }
 
@@ -137,13 +130,11 @@ public class LocationsListFragment extends Fragment {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
-                    Log.e("denied" , "permission denied");
                 }
 
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
+
         }
 
 
@@ -151,3 +142,6 @@ public class LocationsListFragment extends Fragment {
 
 
 }
+
+
+

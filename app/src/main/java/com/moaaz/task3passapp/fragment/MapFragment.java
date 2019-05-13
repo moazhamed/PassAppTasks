@@ -1,6 +1,5 @@
 package com.moaaz.task3passapp.fragment;
 
-
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -32,9 +31,9 @@ import androidx.navigation.Navigation;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
-    MapView locationMap;
-    GoogleMap mGoogleMap;
-    Button next;
+    private MapView locationMap;
+    private GoogleMap mGoogleMap;
+    private Button next;
     public static Location currentLocation;
     Marker currentLocationMarker;
     MyLocationProvider locationProvider;
@@ -51,50 +50,42 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
-        locationMap = view.findViewById(R.id.location_map);
-        locationMap.onCreate(savedInstanceState);
-
-        next = view.findViewById(R.id.next_button);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_mapFragment_to_locationDetailsFragment, bundle);
-
-            }
-        });
-
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        locationMap = view.findViewById(R.id.location_map);
         locationMap.getMapAsync(this);
+        locationMap.onCreate(savedInstanceState);
+
+        next = view.findViewById(R.id.next_button);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_mapFragment_to_locationDetailsFragment, bundle);
+
+            }
+        });
 
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         locationProvider = new MyLocationProvider(getContext(), this);
         currentLocation = locationProvider.getCurrentLocation();
-
         MapsInitializer.initialize(getContext());
         this.mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         LatLng mLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-
         MarkerOptions markerOptions = new MarkerOptions().position(mLatLng).title("You're here");
         currentLocationMarker = mGoogleMap.addMarker(markerOptions);
-
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 12.0f));
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -105,11 +96,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         .position(latLng)
                         .icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-              //  Toast.makeText(getContext(), latLng.latitude + "  " + latLng.longitude, Toast.LENGTH_LONG).show();
                 bundle.putFloat(LONGITUDE, (float) latLng.longitude);
                 bundle.putFloat(LATITUDE, (float) latLng.latitude);
-
-
             }
         });
 
@@ -155,7 +143,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
-
     }
 
     @Override

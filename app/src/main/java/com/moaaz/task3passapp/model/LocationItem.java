@@ -66,10 +66,6 @@ public class LocationItem {
         return photoURI;
     }
 
-//    public Uri getPhotoUri() {
-//        return Uri.parse(photoURI);
-//    }
-
     public void setPhotoURI(String photoURI) {
         this.photoURI = photoURI;
     }

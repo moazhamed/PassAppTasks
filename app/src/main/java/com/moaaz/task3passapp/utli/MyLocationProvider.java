@@ -9,14 +9,14 @@ import android.location.LocationManager;
 import java.util.List;
 
 public class MyLocationProvider {
-   LocationManager locationManager;
+    final int MIN_DISTANCE_BETWEEN_UPDATES = 10;
     Location location;
     boolean canGetlocation;
     Context context;
-    LocationListener  locationListener;
-    public final int MIN_DISTANCE_BETWEEN_UPDATES = 10;
     //10 meters between every update
-    public final int MIN_TIME_BETWEEN_UPDATES = 5 * 1000;
+    final int MIN_TIME_BETWEEN_UPDATES = 5 * 1000;
+    LocationManager locationManager;
+    LocationListener locationListener;
     // 5 seconds between every update
 
     public MyLocationProvider(Context context, LocationListener locationListener) {
